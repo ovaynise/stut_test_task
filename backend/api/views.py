@@ -22,8 +22,6 @@ class ApiViewSet(viewsets.ViewSet):
             return Response(
                 {"error": "Не переданы артикули для запроса"},
                 status=status.HTTP_400_BAD_REQUEST)
-
-        # Запускаем Celery задачу
         task = fetch_and_save_product.delay(articules)
 
         return Response(
