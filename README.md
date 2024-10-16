@@ -1,10 +1,10 @@
-# stuttgart_test_task
+# stut_test_task
 
 ## Для запуска проекта:
 
 1. Скопируйте проект на локальный компьютер из репозитория GutHUB
 ```yaml
-https://github.com/ovaynise/stuttgart_test_task
+https://github.com/ovaynise/stut_test_task
 ```
 
 2. Для запуска контейнеров запустите docker compose файл 
