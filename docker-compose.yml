@@ -1,0 +1,48 @@
+version: '3.3'
+
+volumes:
+  stut_data:
+
+services:
+  stut_db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: stut_db
+      POSTGRES_USER: stut_user
+      POSTGRES_PASSWORD: stut_password
+    volumes:
+      - stut_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7.0
+    ports:
+      - "6379:6379"
+    depends_on:
+      - stut_db
+
+  backend:
+    build: ./backend/
+    environment:
+      POSTGRES_DB: stut_db
+      POSTGRES_USER: stut_user
+      POSTGRES_PASSWORD: stut_password
+      DB_HOST: stut_db
+      CELERY_BROKER_URL: redis://redis:6379/0
+    depends_on:
+      - redis
+      - stut_db
+    ports:
+      - "8000:8000"
+
+  celery:
+    build: ./backend/
+    command: celery -A backend worker --loglevel=info
+    environment:
+      POSTGRES_DB: stut_db
+      POSTGRES_USER: stut_user
+      POSTGRES_PASSWORD: stut_password
+      DB_HOST: stut_db
+    depends_on:
+      - redis
+      - stut_db
+      - backend
